@@ -92,6 +92,10 @@ body {
     background-color: #f8f8f8;
     color: #121212;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url("../img/DSC_0384.png");
+    background-repeat: no-repeat;
+    background-size:contain ;
 }
 /* För att göra footern sticky så har vi flex på bodyn och då räcker det med 
  * margin-top auto här.
@@ -168,9 +172,15 @@ footer {
 
 /* för spelelementet används #id som selektor för att skapa css reglerna */
 #click {
-    width: 8rem;
-    height: 8rem;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 100%;
     font-size: 2rem;
+    background-image: url("../img/0012C943-AC06-4AFA-818E-ECA31EE55DBD.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+    color: white;
+    
 }
 
 /* #msgbox är elementet som visar sidans toasts, popupmeddelanden
