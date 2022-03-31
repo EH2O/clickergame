@@ -9,8 +9,10 @@
  */
 const clickerButton = document.querySelector('#click');
 const moneyTracker = document.querySelector('#money');
+const SoulsTracker = document.querySelector('#Souls');
 const mpsTracker = document.querySelector('#mps'); // money per second
-const mpcTracker = document.querySelector('#mpc'); // money per click
+const mpcTracker = document.querySelector('#mpc');
+const SoulTracker = document.querySelector('#SoulsIfRebirth'); // money per click
 const upgradeList = document.querySelector('#upgradelist');
 const msgbox = document.querySelector('#msgbox');
 
@@ -25,8 +27,9 @@ let money = 0;
 let moneyPerClick = 1;
 let moneyPerSecond = 0;
 let last = 0;
-
+let x = 1;
 let achievementTest = false;
+let Souls = 0;
 
 /* Med ett valt element, som knappen i detta fall så kan vi skapa listeners
  * med addEventListener så kan vi lyssna på ett specifikt event på ett html-element
@@ -59,11 +62,13 @@ clickerButton.addEventListener(
  */
 function step(timestamp) {
     moneyTracker.textContent = Math.round(money);
-    mpsTracker.textContent = moneyPerSecond;
+    mpsTracker.textContent = moneyPerSecond * x;
     mpcTracker.textContent = moneyPerClick;
+    SoulTracker.textContent = Math.round(Math.log(money)*2/100);
+    SoulsTracker.textContent = Souls;
 
     if (timestamp >= last + 1000) {
-        money += moneyPerSecond;
+        money += moneyPerSecond*x;
         last = timestamp;
     }
 
@@ -107,21 +112,48 @@ window.addEventListener('load', (event) => {
  */
 upgrades = [
     {
-        name: 'Fin sop',
+        name: 'Punching Power',
+        cost: 5,
+        clicks: 1,
+    },
+    {
+        name: 'Kitten',
         cost: 10,
-        amount: 1,
+        amount: 0.5,
     },
     {
-        name: 'Spade',
-        cost: 100,
-        amount: 10,
+        name: 'Sås',
+        cost: 50,
+        amount: 5,
+    },   
+    {
+        name: 'Give your cats hats',
+        cost: 50,
+        Double: 2,
     },
     {
-        name: 'Hjälpreda',
+        name: 'Cat',
         cost: 1000,
-        amount: 100,
+        amount: 50,
     },
+    {
+        name: 'Stronge hund',
+        cost: 25000,
+        amount: 250,
+    },  
+    {
+        name: 'Bastet',
+        cost: 500000,
+        amount: 50000,
+    },
+    {
+        name: 'New Game',
+        cost: 0,
+        Soul: 10,
+    },
+ 
 ];
+
 
 /* createCard är en funktion som tar ett upgrade objekt som parameter och skapar
  * ett html kort för det.
@@ -148,21 +180,53 @@ function createCard(upgrade) {
     header.classList.add('title');
     const cost = document.createElement('p');
 
-    header.textContent = `${upgrade.name}, +${upgrade.amount} per sekund.`;
-    cost.textContent = `Köp för ${upgrade.cost} benbitar.`;
+    if (upgrade.amount) {
+        header.textContent = `${upgrade.name}, +${upgrade.amount} per sekund.`;
+    } else if (upgrade.clicks) {
+        header.textContent = `${upgrade.name}, +${upgrade.clicks} per klick.`;
+    } else if (upgrade.Soul) {
+        header.textContent = `${upgrade.name}, Start over from the start.`;
+    }else{
+        header.textContent = `${upgrade.name}, Double your power.`;
+    }
+
+    cost.textContent = `Köp för ${upgrade.cost} Cash Money.`;
 
     card.addEventListener('click', (e) => {
         if (money >= upgrade.cost) {
-            moneyPerClick++;
+            if(upgrade.Double >= 0){
+                x *= upgrade.Double;
+                money -=upgrade.cost;
+                upgrade.cost *= 5;
+                upgrade.cost = Math.ceil(upgrade.cost)
+                cost.textContent = 'Köp för ' + upgrade.cost + ' Cash Money';
+            }
+            else if(upgrade.clicks >= 0){
+                moneyPerClick += upgrade.clicks;
+                money -=upgrade.cost;
+                upgrade.cost *= 2;
+                upgrade.cost = Math.ceil(upgrade.cost);
+                cost.textContent = 'Köp för ' + upgrade.cost + ' Cash Money';
+            }
+            else if(upgrade.Soul >= 0){
+                moneyPerClick == 1;
+                moneyPerSecond == 0;
+                Souls == Math.round(Math.log(money)*2/100)  
+            }
+            else{
             money -= upgrade.cost;
-            upgrade.cost *= 1.5;
-            cost.textContent = 'Köp för ' + upgrade.cost + ' benbitar';
+            upgrade.cost *= 1.2;
+            upgrade.cost = Math.ceil(upgrade.cost)
+            cost.textContent = 'Köp för ' + upgrade.cost + ' Cash Money';
             moneyPerSecond += upgrade.amount;
             message('Grattis du har lockat till dig fler besökare!', 'success');
+            }
         } else {
             message('Du har inte råd.', 'warning');
         }
     });
+    
+    
 
     card.appendChild(header);
     card.appendChild(cost);

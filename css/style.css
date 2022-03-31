@@ -20,6 +20,10 @@ dl,
 dd {
     margin: 0;
     padding: 0;
+    color: white;
+    font-family: 'Comforter Brush', cursive;
+font-family: 'Shadows Into Light', cursive;
+font-size: 30px;
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
@@ -91,11 +95,11 @@ body {
     flex-direction: column;
     background-color: #f8f8f8;
     color: #121212;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ 
 
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url("../img/DSC_0384.png");
     background-repeat: no-repeat;
-    background-size:contain ;
+    background-size:cover ;
 }
 /* För att göra footern sticky så har vi flex på bodyn och då räcker det med 
  * margin-top auto här.
@@ -226,11 +230,16 @@ footer {
     border: 1px solid #646464;
     margin: 0.5rem 0;
     padding: 1rem 0.5rem;
+    transition: all 0.5s ease;
+  
 }
 
 .card:hover {
-    background-color: #dfdfdf;
+    background-color: rgba(125, 255, 212, 0.315);
+    transition: all 0.2s ease-in-out;
 }
+
+
 /* klassen används på kortets titel, font-weight: 600 gör fonten fetare, en normal
  * font vikt är oftast 400
  */
