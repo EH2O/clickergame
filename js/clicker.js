@@ -157,8 +157,8 @@ upgrades = [
         amount: 50000,
     },
     {
-        name: 'New Game',
-        cost: 1,
+        name: 'New Game (tba)',
+        cost: 10000000,
         ow: 0,
         Soul: 10,
     },
