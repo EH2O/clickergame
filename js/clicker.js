@@ -31,7 +31,8 @@ let x = 1;
 let achievementTest = false;
 let Souls = 0;
 let price = 0;
-
+let destroy = 0;
+let y = "";
 /* Med ett valt element, som knappen i detta fall så kan vi skapa listeners
  * med addEventListener så kan vi lyssna på ett specifikt event på ett html-element
  * som ett klick.
@@ -65,7 +66,7 @@ function step(timestamp) {
     moneyTracker.textContent = Math.round(money);
     mpsTracker.textContent = moneyPerSecond * x;
     mpcTracker.textContent = moneyPerClick;
-    SoulTracker.textContent = Math.round(money/(1000000));
+    SoulTracker.textContent = Math.round(money/(100000000));
     SoulsTracker.textContent = Souls;
 
     if (timestamp >= last + 1000) {
@@ -151,13 +152,13 @@ upgrades = [
     },  
     {
         name: 'Bastet',
-        cost: 1,
+        cost: 500000,
         ow: 0,
         amount: 50000,
     },
     {
         name: 'New Game',
-        cost: 0,
+        cost: 1,
         ow: 0,
         Soul: 10,
     },
@@ -203,33 +204,51 @@ function createCard(upgrade) {
     cost.textContent = `Köp för ${upgrade.cost} Cash Money.`;
 
     card.addEventListener('click', (e) => {
-        if (money >= upgrade.cost+(0.3^upgrade.ow*upgrade.cost)) {
+        if (money >= (Math.pow(1.3,upgrade.ow)*upgrade.cost)) {
             if(upgrade.Double >= 0){
                 x *= upgrade.Double;
                 money -=upgrade.cost;
-                upgrade.cost *= 5;
+                upgrade.ow;
                 upgrade.cost = Math.ceil(upgrade.cost)
                 cost.textContent = 'Köp för ' + upgrade.cost + ' Cash Money';
             }
             else if(upgrade.clicks >= 0){
+                if(money >= (Math.pow(2,upgrade.ow)*upgrade.cost)){
                 moneyPerClick += upgrade.clicks;
-                money -=upgrade.cost;
-                upgrade.cost *= 2;
-                upgrade.cost = Math.ceil(upgrade.cost);
-                cost.textContent = 'Köp för ' + upgrade.cost + ' Cash Money';
+                money -= (Math.pow(2,upgrade.ow)*upgrade.cost);
+                upgrade.ow++;
+                cost.textContent = 'Köp för ' + Math.ceil(Math.pow(2,upgrade.ow)*upgrade.cost) + ' Cash Money';
+                }
+                else{
+                    message('Du har inte råd.', 'warning');
+                }
+            
             }
             else if(upgrade.Soul >= 0){
                 moneyPerClick = 1;
                 moneyPerSecond -= moneyPerSecond;
-                Souls += Math.round(money/1000000);
+                Souls += Math.round(money/100000000);
                 money = 0;
+                y = document.querySelector("#upgradelist");
+            
+                for (let i = 0; i < upgrades.length; i++) {
+                    upgrades[i].ow = 0;
+                    upgrades[i].cost *= 0.8;
+                }
+                
+                y.innerHTML = "";
+    
+                upgrades.forEach((upgrade) => {
+                    upgradeList.appendChild(createCard(upgrade));
+                });
+                    
             }
             else{
             money -= (Math.pow(1.3,upgrade.ow)*upgrade.cost);
+            upgrade.ow++;
             price = (Math.pow(1.3,upgrade.ow)*upgrade.cost);
             cost.textContent = 'Köp för ' + Math.ceil(price) + ' Cash Money';
             moneyPerSecond += upgrade.amount;
-            upgrade.ow++;
             message('Grattis du har lockat till dig fler besökare!', 'success');
             }
         } else {
